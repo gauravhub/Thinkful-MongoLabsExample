@@ -1,61 +1,63 @@
-var http = require('http');
-var url = require('url');
+var express = require('express');
+var bodyParser = require('body-parser');
+var app = express();
 var items = [];
 
-var isFound = function(i, res) {
-	if (isNaN(i)) {
-		res.statusCode = 400;
-		res.end('Item id not valid');
-	}
-	else if (!items[i]) {
-		res.statusCode = 404;
-		res.end('Item not found');
+app.use( bodyParser.urlencoded() ); // to support URL-encoded bodies
+
+app.use(function (req, res, next) {
+	console.log(req.body) // populated!
+	next()
+})
+
+app.get('/', function(req, res){
+	items.forEach(function (item, i) {
+		res.write(i + '. ' + item + '\n');
+	});
+	res.end();
+});
+
+app.get('/:index', function(req, res){
+	if (items[req.params.index]) {
+		res.send("getting "+req.params.index);
 	}
 	else {
-		return true;
+		res.send("Item not found");
 	}
-};
+});
 
-var server = http.createServer(function (req, res) {
-	var pathname = url.parse(req.url).pathname;
-	var i = parseInt(pathname.slice(1), 10);
-	var item = '';
+app.post('/', function(req, res){
+	if (!req.param('item')) {
+		res.send('Item not valid');
+		res.statusCode = 400;
+	} else {
+		items.push(req.param('item'));
+		res.send("adding " + req.param('item'));
+	}
+});
 
-	req.on('data', function (chunk) {
-		item += chunk;
-	});
+app.put('/:index', function(req, res){
+	if (items[req.params.index] && req.param('item')) {
+		items[req.params.index] = req.param('item');
+		res.send("putting "+req.params.index);
+	}
+	else {
+		res.send("item not found");
+	}
+});
 
-	switch (req.method) {
-	case 'GET':
-		items.forEach(function (item, i) {
-			res.write(i + '. ' + item + '\n');
-		});
-		res.end();
-		break;
-	case 'POST':
-		req.on('end', function () {
-			items.push(item);
-			res.end('Item added\n');
-		});
-		break;
-	case 'PUT':
-		req.on('end', function () {
-			if (isFound(i, res)) {
-				items[i] = item;
-				res.end('Item updated successfully');
-			}
-		});
-		break;
-	case 'DELETE':
-		if (isFound(i, res)) {
-			items.splice(i, 1);
-			res.end('Item deleted successfully');
-		}
-		break;
+app.delete('/:index', function(req, res){
+	if (items[req.params.index]) {
+		items.splice(req.params.index, 1);
+		res.end('Item deleted successfully');
+	}
+	else {
+		res.send("item not found");
 	}
 });
 
 var port = process.env.PORT || 5000;
-server.listen(port, function () {
+app.listen(port, function () {
 	console.log('listening on '+port);
 });
+

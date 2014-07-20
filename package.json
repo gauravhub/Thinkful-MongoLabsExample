@@ -11,5 +11,10 @@
   "license": "ISC",
   "engines": {
     "node": "0.10.x"
+  },
+  "dependencies": {
+    "mongodb": "^1.4.7",
+    "express": "^4.6.1",
+    "body-parser": "^1.4.3"
   }
 }
