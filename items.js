@@ -31,6 +31,7 @@ exports.retrieveAll = function(req, res){
 };
 
 exports.retrieveOne = function(req, res) {
+	// TODO: add some err handling
 	Item.findOne({'_id':mongoose.Types.ObjectId(req.param('mongoId'))}, function (err, item) {
 		if (err) return console.error(err);
 		res.send(item);
@@ -38,6 +39,7 @@ exports.retrieveOne = function(req, res) {
 }
 
 exports.update = function(req, res) {
+	// TODO: add some err handling
 	Item.findByIdAndUpdate(mongoose.Types.ObjectId(req.param('mongoId')), {'item':req.param('item')}, function (err, result) {
 		if (err) return console.error(err);
 		res.send(result);
