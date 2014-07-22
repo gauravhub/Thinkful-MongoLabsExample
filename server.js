@@ -29,16 +29,12 @@ app.listen(port, function () {
 	console.log('listening on '+port);
 });
 
-mongoose.connect('mongodb://localhost/test');
+mongoose.connect('mongodb://<mongolab uri>');
 
 var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function callback () {
-	// yay!
+db.on('error', function callback () {
+	console.error('connection error');
 });
-
-// Error handler
-mongoose.connection.on('error', function (err) {
-	console.log(err)
-})
-
+db.once('open', function callback () {
+	console.error('connection success');
+});
