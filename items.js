@@ -37,14 +37,14 @@ exports.retrieveOne = function(req, res) {
 }
 
 exports.update = function(req, res) {
-	Item.findByIdAndUpdate(mongoose.Types.ObjectId(req.param('mongoId')), {'item':req.param('item')}, function (err, result) {
+	Item.findByIdAndUpdate(mongoose.Types.ObjectId(req.param('_id')), {'item':req.param('item')}, function (err, result) {
 		if (err) return console.error(err);
 		res.send(result);
 	})
 }
 
 exports.delete = function(req, res) {
-	Item.remove({'_id':mongoose.Types.ObjectId(req.param('mongoId'))}, function (err, result) {
+	Item.remove({'_id':mongoose.Types.ObjectId(req.param('_id'))}, function (err, result) {
 		if (err) return console.error(err);
 		res.send({});
 	})
