@@ -2,8 +2,7 @@ var mongoose = require('mongoose');
 
 // defines our schema
 var itemSchema = mongoose.Schema({
-	item: String,
-	index: Number // may refactor out
+	item: String
 })
 
 // creates our mongoose model
