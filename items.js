@@ -30,7 +30,7 @@ exports.retrieveAll = function(req, res){
 };
 
 exports.retrieveOne = function(req, res) {
-	Item.find({'_id':mongoose.Types.ObjectId(req.param('mongoId'))}, function (err, item) {
+	Item.find({'_id':mongoose.Types.ObjectId(req.param('id'))}, function (err, item) {
 		if (err) return console.error(err);
 		res.send(item);
 	});
